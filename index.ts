@@ -12,7 +12,7 @@ class IdSearch extends PolymerElement {
     <input type="text" placeholder="Accession Number" name="aNum" on-submit="handleSubmit" id="aNum"/>
   </form>
 </div>
-selection: {{selection}}
+selection: [[selection]]
 `;
   }
   static get properties() {
@@ -39,7 +39,8 @@ selection: {{selection}}
     console.log("submit");
     console.log(this.shadowRoot.getElementById("aNum").value);
 
-    fetch("https://test.sparqlist.glyconavi.org/api/WURCS2GlyTouCan?WURCS=WURCS%3D2.0%2F2%2C2%2C1%2F%5Ba2122h-1b_1-5_2*NCC%2F3%3DO%5D%5Ba2112h-1b_1-5%5D%2F1-2%2Fa4-b1").then(response => {
+    var self = this;
+    fetch("https://test.sparqlist.glyconavi.org/api/WURCS2GlyTouCan?WURCS=" + this.shadowRoot.getElementById("aNum").value).then(response => {
       if (response.ok) {
         console.log("ok");
         // console.log(response.json());
@@ -51,15 +52,15 @@ selection: {{selection}}
           console.log(data);
           console.log(data[0]);
           console.log(data[0].GlyTouCan);
+          self.selection = data[0].GlyTouCan;
         });
-        return;
       }
       throw new Error('Network response was not ok.');
     }).catch(function (error) {
       console.log('There has been a problem with your fetch operation: ', error.message);
     });
-
-    // this.selection=
+    console.log("id");
+    // console.log(id);
   }
   _handleAjaxPostError(e) {
     console.log('error: ' + e);
